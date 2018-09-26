@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Xử lý đa phương tiện</title>
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<style>
+	#menu{
+		animation: thaydoihinhnen 20s infinite;
+	}
+
+	@keyframes thaydoihinhnen{
+		0% {
+			background-color: rgb(127, 145, 228);
+		}
+		20% {
+			background-color: #36eab2;
+		}
+		40% {
+			background-color: #e141de;
+		}
+		60% {
+			background-color: #36eab2;
+		}
+		100% {
+			background-color: rgb(127, 145, 228);
+		}
+	}
+	#myCanvas{
+		border: 1px solid red;
+	}
+</style>
+</head>
+<body style="font-size: 16px;">
+	<div class="row">
+		<div class="col-md-2" style="min-height: 100vh;" id="menu">
+			<div>
+				<a href="PTBac2.html">
+					<button type="button" class="btn btn-danger" style="margin: 3em 0 0 1em;">Phương trình bậc hai</button>
+				</a>
+			</div>
+			<div>
+				<a href="UCLN2So.html">
+					<button type="button" class="btn btn-danger" style="margin: 3em 0 0 1em;">&emsp;UCLN của 2 số&emsp;&emsp;</button>
+				</a>
+			</div>
+			<div>
+				<a href="TimMax.html">
+					<button type="button" class="btn btn-warning" style="margin: 3em 0 0 1em;">Tìm max của dãy số&emsp;</button>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3" style="margin-top: 2em;">
+			<h3>Nhập giá trị đầu vào</h3>
+			<form>
+				<div class="row">
+					<div class="col-md-12">
+						<div>
+							<b>Nhập dãy số (cách nhau bởi dấy phẩy)</b>
+							<input type="text" class="form-control" id="mang" value="0">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div>
+							<b>Tốc độ (ms)</b>
+							<input type="number" class="form-control" value="100" id="tocdo">
+						</div>
+						<div  style="margin-top: 1em;">
+							<button type="button" class="btn btn-primary" id="chayPTB2">Chạy chương trình</button>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div  style="margin-top: 5em;">
+							<button type="reset" class="btn btn-primary btn-block" id="reset">Reset</button>
+						</div>
+					</div>
+					<div class="col-md-12" style="margin-top: 1em;" id="ketqua">
+						<!-- <table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>a</th>
+									<th>b</th>
+								</tr>
+							</thead>
+							<tbody class="table-success">
+								<tr>
+									<td>a</td>
+									<td>a</td>
+								</tr>
+							</tbody>
+						</table> -->
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-md-7" style="background-color: hsl(0,0%,90%);">
+			<canvas id="myCanvas" height="710" width="750"></canvas>
+		</div>
+		
+	</div>
+	<script src="bower_components/sweetalert2/dist/sweetalert2.all.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		var canvas = document.getElementById('myCanvas');
+		var ctx = canvas.getContext('2d');
+		console.log(canvas.width);
+		veChu("* Ý tưởng", 15, 50, 'black');
+		veChuThuong("- Khởi gán max = a1", 30, 80, 'black');
+		veChuThuong("- Duyệt mảng lần lượt với i từ 2 đến n. Lần lượt so sánh giá trị số hạng của ai với giá trị max.", 30, 110, 'black');
+		veChuThuong("Nếu ai > max thì max nhận giá trị mới là ai", 30, 140, 'black');
+		veChu("* Mô phỏng", 15, 170, 'black');
+		var arr;
+
+		function VeHinh(){
+			if(mang == "") {
+				swal('Vui lòng nhập lại mảng');
+				return;
+			}
+
+			var mang = document.getElementById('mang').value;
+			arr = mang.split(',');
+			console.log(arr);
+
+			for (var i = 0; i < arr.length; i++) {
+				vePhanTu(ctx, arr, i, 'yellow');
+			}
+		}
+
+
+		var chay = document.getElementById('chayPTB2');
+		var reset = document.getElementById('reset');
+		var interval;
+		var ketqua = document.getElementById('ketqua');
+
+		reset.onclick = function(){
+			clearInterval(interval);
+			while(ketqua.firstChild){
+				ketqua.removeChild(ketqua.firstChild);
+			}
+			VeHinh();
+		}
+
+
+		function hienKetQua(){
+			while(ketqua.firstChild){
+				ketqua.removeChild(ketqua.firstChild);
+			}
+			var nodeh3 = document.createElement('h3');
+			nodeh3.innerHTML = "Kết quả:";
+			ketqua.appendChild(nodeh3);
+		}
+
+		chay.onclick =  function() {
+			clearInterval(interval);
+			// hienKetQua();
+			VeHinh();
+			ctx.clearRect(0, 400, canvas.width, 300);
+			var lap = 0;
+			
+			
+			var tocdo = document.getElementById('tocdo').value;
+			var chiso = 0, max, j = 0;
+			interval = setInterval(function(){
+				if(chiso == arr.length - 2) console.log('d')
+				if(lap == 0) {
+					max = arr[0];
+					vePhanTu(ctx, arr, chiso, 'red', 'black');
+					veMax(ctx, chiso, max, 'green' ,'white');
+				}
+				if(lap != 0) {
+					j++;
+					if(j % 4 == 1){
+						xoaMax(ctx, chiso);
+						chiso++;
+						VeHinh();
+						vePhanTu(ctx, arr, chiso, 'red', 'black');
+						veMax(ctx, chiso, max, 'green', 'white');
+					}
+					if(j % 4 == 2){
+						VeHinh();
+						// if(max < arr[chiso]) max = arr[chiso];
+						vePhanTu(ctx, arr, chiso, 'cyan', 'black');
+						veMax(ctx, chiso, max, 'cyan', 'black');
+					}
+					if(j % 4 == 3){
+						VeHinh();
+						if(max < arr[chiso]) max = arr[chiso];
+						vePhanTu(ctx, arr, chiso, 'cyan', 'black');
+						veMax(ctx, chiso, max, 'cyan', 'black');
+					}
+					if(j % 4 == 0){
+						VeHinh();
+						if(chiso >= arr.length - 1) {
+							hienKetQua();
+							var kq = document.createElement('b');
+							kq.innerHTML = "UCLN := " + max;
+							ketqua.appendChild(kq);
+							veChu("UCLN := " + max, 200 + 70 * chiso, 370, 'black');
+							clearInterval(interval);
+						}
+						vePhanTu(ctx, arr, chiso, 'red', 'black');
+						veMax(ctx, chiso, max, 'green', 'white');
+					}
+				}
+
+				lap++;
+				console.log(arr.length);
+				
+			}, tocdo);
+		};
+
+
+		function vePhanTu(ctx, arr, m, backgroundColor, textColor){
+			ctx.beginPath();
+			// ctx.moveTo(0 + 70 * m, 70);
+			ctx.rect(70 + 70 * m, 250, 50, 50);
+			ctx.fillStyle = backgroundColor;
+			ctx.fill();
+			ctx.lineWidth = 2;
+			ctx.strokeStyle = 'green';
+			ctx.stroke();
+			ctx.font = "bold 22px Time New Romman";
+			ctx.textAlign = "center";
+			ctx.fillStyle = 'black';
+			ctx.fillText((m+1).toString(), 95 + 70 * m, 230);
+			ctx.font = "bold 28px Time New Romman";
+			ctx.fillStyle = textColor;
+			ctx.fillText(arr[m].toString(), 95 + 70 * m, 285);
+			ctx.closePath();
+		}
+
+		function veMax(ctx, m, max, backgroundColor, textColor){
+			ctx.beginPath();
+			ctx.fillStyle = backgroundColor;
+			ctx.rect(70 + 70 * m, 327, 50, 50);
+			ctx.fill();
+			ctx.lineWidth = 2;
+			ctx.strokeStyle = 'green';
+			ctx.stroke();
+			ctx.textAlign = "center";
+			ctx.font = "bold 28px Time New Romman";
+			ctx.fillStyle = textColor;
+			ctx.fillText(max.toString(), 95 + 70 * m, 360);
+			ctx.closePath();
+		}
+
+		function xoaMax(ctx, m){
+			ctx.clearRect(70 + 70 * m - 2, 327 - 2, 54, 54);
+		}
+
+		function veChu(text, x, y, color){
+			ctx.beginPath();
+			ctx.font = 'bold 16pt serif';
+			ctx.fillStyle = color;
+			ctx.fillText(text, x, y);
+			ctx.closePath();
+		}
+
+		function veChuThuong(text, x, y, color){
+			ctx.beginPath();
+			ctx.font = '14pt serif';
+			ctx.fillStyle = color;
+			ctx.fillText(text, x, y);
+			ctx.closePath();
+		}
+	</script>
+</body>
+</html>

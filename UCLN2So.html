@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Xử lý đa phương tiện</title>
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<style>
+	#menu{
+		animation: thaydoihinhnen 20s infinite;
+	}
+
+	@keyframes thaydoihinhnen{
+		0% {
+			background-color: rgb(127, 145, 228);
+		}
+		20% {
+			background-color: #36eab2;
+		}
+		40% {
+			background-color: #e141de;
+		}
+		60% {
+			background-color: #36eab2;
+		}
+		100% {
+			background-color: rgb(127, 145, 228);
+		}
+	}
+	#myCanvas{
+		border: 1px solid red;
+	}
+</style>
+</head>
+<body style="font-size: 16px;">
+	<div class="row">
+		<div class="col-md-2" style="min-height: 100vh;" id="menu">
+			<div>
+				<a href="PTBac2.html">
+					<button type="button" class="btn btn-danger" style="margin: 3em 0 0 1em;">Phương trình bậc hai</button>
+				</a>
+			</div>
+			<div>
+				<a href="UCLN2So.html">
+					<button type="button" class="btn btn-warning" style="margin: 3em 0 0 1em;">&emsp;UCLN của 2 số&emsp;&emsp;</button>
+				</a>
+			</div>
+			<div>
+				<a href="TimMax.html">
+					<button type="button" class="btn btn-danger" style="margin: 3em 0 0 1em;">Tìm max của dãy số&emsp;</button>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3" style="margin-top: 2em;">
+			<h3>Nhập giá trị đầu vào</h3>
+			<form>
+				<div class="row">
+					<div class="col-md-6">
+						<div>
+							<b>Nhập a</b>
+							<input type="number" class="form-control" id="soA" value="0">
+						</div>
+						<div>
+							<b>Tốc độ (ms)</b>
+							<input type="number" class="form-control" value="100" id="tocdo">
+						</div>
+						<div  style="margin-top: 1em;">
+							<button type="button" class="btn btn-primary" id="chayPTB2">Chạy chương trình</button>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div>
+							<b>Nhập b</b>
+							<input type="number" class="form-control" id="soB" value="0">
+						</div>
+						
+						<div  style="margin-top: 5em;">
+							<button type="reset" class="btn btn-primary btn-block" id="reset">Reset</button>
+						</div>
+					</div>
+					<div class="col-md-12" style="margin-top: 1em;" id="ketqua">
+						<!-- <table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>a</th>
+									<th>b</th>
+								</tr>
+							</thead>
+							<tbody class="table-success">
+								<tr>
+									<td>a</td>
+									<td>a</td>
+								</tr>
+							</tbody>
+						</table> -->
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-md-7" style="background-color: hsl(0,0%,90%);">
+			<canvas id="myCanvas" height="710" width="750"></canvas>
+		</div>
+		
+	</div>
+	<script src="bower_components/sweetalert2/dist/sweetalert2.all.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		var canvas = document.getElementById('myCanvas');
+		var ctx = canvas.getContext('2d');
+		VeHinh();
+
+		function VeHinh(){
+			veHinhElip(ctx, 200, 50, 60, 20, 'green', 'white');
+			veChu("Bắt đầu", 165, 60, 'black');
+
+			veMuiTen(ctx, 200, 70, 5, 20, 'green');
+
+			veHinhBinhHanh(ctx, 120, 105, 180, 40, 'green', 'white');
+			veChu("Nhập a, b", 150, 130, 'black');
+
+			veDuongThang(ctx, 200, 145, 5, 15, 'green');
+			veDuongThang(ctx, 200, 160, 5, 25, 'green');
+			veMuiTen(ctx, 200, 185, 5, 10, 'green');
+
+			veHinhThoi(ctx, 200, 210, 150, 50, 'green', 'white');
+			veChu("a = b", 180, 240, 'black');
+
+			veDuongThang(ctx, 270, 232, 80, 7, 'green');
+			veTamGiacPhai(ctx, 350, 235, 'green');
+
+			veHinhChuNhat(ctx, 370, 215, 150, 40, 'green', 'white');
+			veChu("UCLN := a", 395, 240, 'black');
+
+			veDuongThang(ctx, 520, 232, 50, 7, 'green');
+			veTamGiacPhai(ctx, 570, 235, 'green');
+
+			veMuiTen(ctx, 200 , 260, 5, 20, 'green');
+
+			veHinhThoi(ctx, 200, 295, 150, 50, 'green', 'white');
+			veChu("b > a", 180, 325, 'black');
+
+			veDuongThang(ctx, 270, 317, 80, 7, 'green');
+			veTamGiacPhai(ctx, 350, 320, 'green');
+
+			veHinhChuNhat(ctx, 370, 300, 145, 40, 'green', 'white');
+			veChu("a := a - b", 400, 325, 'black');
+
+			veDuongThang(ctx, 440, 340, 7, 150, 'green');
+
+			// veDuongThang(ctx, 50, 520, 397, 7, 'red');
+			veDuongThang(ctx, 50, 490, 157, 7, 'green');
+			veDuongThang(ctx, 207, 490, 240, 7, 'green');
+
+			veDuongThang(ctx, 50, 160, 7, 330, 'green');
+			veDuongThang(ctx, 50, 160, 140, 7, 'green');
+			veTamGiacPhai(ctx, 185, 162, 'green');
+
+			veMuiTen(ctx, 200 , 347, 5, 15, 'green');
+
+			veHinhChuNhat(ctx, 120, 380, 160, 40, 'green', 'white');
+			veChu("b := b - a", 160, 405, 'black');
+
+			veDuongThang(ctx, 200, 420, 7, 70, 'green');
+			// veDuongThang(ctx, 80, 460, 127, 7, 'green');
+			// veDuongThang(ctx, 80, 180, 7, 280, 'green');
+			// veDuongThang(ctx, 80, 180, 110, 7, 'green');
+			// veTamGiacPhai(ctx, 185, 182, 'green');
+
+			veHinhElip(ctx, 645, 235, 60, 20, 'green', 'white');
+			veChu("Kết thúc", 610, 242, 'black');
+		}
+
+
+		var chay = document.getElementById('chayPTB2');
+		var reset = document.getElementById('reset');
+		var interval;
+		var ketqua = document.getElementById('ketqua');
+
+		reset.onclick = function(){
+			clearInterval(interval);
+			while(ketqua.firstChild){
+				ketqua.removeChild(ketqua.firstChild);
+			}
+			VeHinh();
+		}
+
+
+		function hienKetQua(){
+			while(ketqua.firstChild){
+				ketqua.removeChild(ketqua.firstChild);
+			}
+			var nodeh3 = document.createElement('h3');
+			nodeh3.innerHTML = "Kết quả:";
+			ketqua.appendChild(nodeh3);
+		}
+
+		chay.onclick =  function() {
+			clearInterval(interval);
+			hienKetQua();
+			VeHinh();
+			var soA = document.getElementById('soA').value;
+			var soB = document.getElementById('soB').value;
+			var delta;
+			if(soA == "" || soB == "" ) {
+				swal('Vui lòng nhập đầy đủ thông tin đầu vào');
+				return;
+			}
+			var th, tr, td, tbody;
+			var mauVien = 'red';
+			// var mauNen = '#FFFB5E';
+			var mauNen = 'white';
+
+			var i = 0;
+			var checkStart = checkB = checkA = true;
+			var tocdo = document.getElementById('tocdo').value;
+			interval = setInterval(function(){
+				i++;
+				switch(i){
+					case 1: {
+						veHinhElip(ctx, 200, 50, 60, 20, mauVien, mauNen);
+						veChu("Bắt đầu", 165, 60, 'black');
+						break;
+					}
+					case 2: {
+						veMuiTen(ctx, 200 , 70, 5, 20, mauVien);
+						break;
+					}
+					case 3: {
+						veHinhBinhHanh(ctx, 120, 105, 180, 40, mauVien, mauNen);
+						veChu("Nhập a, b", 150, 130, 'black');
+						var table = document.createElement('table');
+						table.classList.add('table');
+						table.classList.add('table-bordered');
+						table.classList.add('table-hover');
+						var thead = document.createElement('thead');
+						tr = document.createElement('tr');
+						thead.appendChild(tr);
+						th = document.createElement('th');
+						th.innerHTML = "a";
+						tr.appendChild(th);
+						th = document.createElement('th');
+						th.innerHTML = "b";
+						tr.appendChild(th);
+						table.appendChild(thead);
+						ketqua.appendChild(table);
+
+						soA = parseInt(soA);
+						soB = parseInt(soB);
+
+						tbody = document.createElement('tbody');
+						tbody.classList.add('table-success');
+						table.appendChild(tbody);
+						tr = document.createElement('tr');
+						tbody.appendChild(tr);
+						td = document.createElement('td');
+						td.innerHTML = soA;
+						tr.appendChild(td);
+						td = document.createElement('td');
+						td.innerHTML = soB;
+						tr.appendChild(td);
+						break;
+					}
+					case 4: {
+						veDuongThang(ctx, 200, 145, 5, 15, 'red');
+						if(checkStart){
+							checkStart = false;
+						} else{
+							mauVien = '#' + Math.floor(Math.random()*16777215).toString(16);
+							mauNen = "white";
+						}
+						// if(checkA){
+
+						// }
+						veDuongThang(ctx, 200, 160, 5, 25, mauVien);
+						veMuiTen(ctx, 200, 185, 5, 10, mauVien);
+						break;
+					}
+					case 5: {
+						veHinhThoi(ctx, 200, 210, 150, 50, mauVien, mauNen);
+						veChu("a = b", 180, 240, "black");
+						
+						if(soA == soB){
+
+						} else {
+							i = 9;
+						}
+						break;
+					}
+					case 6: {
+						veDuongThang(ctx, 270, 232, 80, 7, mauVien);
+						veTamGiacPhai(ctx, 350, 235, mauVien);
+						break;
+					}
+					case 7: {
+						veHinhChuNhat(ctx, 370, 215, 150, 40, mauVien, mauNen);
+						veChu("UCLN := a", 395, 240, 'black');
+						var UCLN = document.createElement('h4');
+						UCLN.innerHTML = "UCLN := " + soA;
+						ketqua.appendChild(UCLN);
+						break;
+					}
+					case 8: {
+						veDuongThang(ctx, 520, 232, 50, 7, mauVien);
+						veTamGiacPhai(ctx, 570, 235, mauVien);
+						break;
+					}
+					case 9:{
+						veHinhElip(ctx, 645, 235, 60, 20, mauVien, mauNen);
+						veChu("Kết thúc", 610, 242, 'black');
+						clearInterval(interval);
+						break;
+					}
+					case 10:{
+						veMuiTen(ctx, 200 , 260, 5, 20, mauVien);
+						break;
+					}
+					case 11: {
+						veHinhThoi(ctx, 200, 295, 150, 50, mauVien, mauNen);
+						veChu("b > a", 180, 325, 'black');
+						if(soB > soA){
+
+						} else{
+							i = 14;
+						}
+						break;
+					}
+					case 12: {
+						veMuiTen(ctx, 200 , 347, 5, 15, mauVien);
+						break;
+					}
+					case 13: {
+						veHinhChuNhat(ctx, 120, 380, 160, 40, mauVien, mauNen);
+						veChu("b := b - a", 160, 405, 'black');
+						soB -= soA;
+						tr = document.createElement('tr');
+						tbody.appendChild(tr);
+						td = document.createElement('td');
+						td.innerHTML = soA;
+						tr.appendChild(td);
+						td = document.createElement('td');
+						td.innerHTML = soB;
+						tr.appendChild(td);
+						break;
+					}
+					case 14: {
+						// veDuongThang(ctx, 200, 420, 7, 40, mauVien);
+						// veDuongThang(ctx, 80, 460, 127, 7, mauVien);
+						// veDuongThang(ctx, 80, 180, 7, 280, mauVien);
+						// veDuongThang(ctx, 80, 180, 110, 7, mauVien);
+						// veTamGiacPhai(ctx, 185, 182, mauVien);
+						veDuongThang(ctx, 200, 420, 7, 70, mauVien);
+						veDuongThang(ctx, 50, 490, 157, 7, mauVien);
+						// veDuongThang(ctx, 207, 490, 240, 7, mauVien);
+
+						veDuongThang(ctx, 50, 160, 7, 330, mauVien);
+						veDuongThang(ctx, 50, 160, 140, 7, mauVien);
+						veTamGiacPhai(ctx, 185, 162, mauVien);
+						i = 3;
+						break;
+					}
+					case 15: {
+						veDuongThang(ctx, 270, 317, 80, 7, mauVien);
+						veTamGiacPhai(ctx, 350, 320, mauVien);
+						break;
+					}
+					case 16:{
+						veHinhChuNhat(ctx, 370, 300, 145, 40, mauVien, mauNen);
+						veChu("a := a - b", 400, 325, 'black');
+						soA -= soB;
+						tr = document.createElement('tr');
+						tbody.appendChild(tr);
+						td = document.createElement('td');
+						td.innerHTML = soA;
+						tr.appendChild(td);
+						td = document.createElement('td');
+						td.innerHTML = soB;
+						tr.appendChild(td);
+						break;
+					}
+					case 17:{
+						veDuongThang(ctx, 440, 340, 7, 150, mauVien);
+
+						// veDuongThang(ctx, 50, 520, 397, 7, mauVien);
+						// veDuongThang(ctx, 50, 160, 7, 360, mauVien);
+						// veDuongThang(ctx, 50, 160, 140, 7, mauVien);
+						// veTamGiacPhai(ctx, 185, 162, mauVien);
+						veDuongThang(ctx, 50, 490, 157, 7, mauVien);
+						veDuongThang(ctx, 207, 490, 240, 7, mauVien);
+
+						veDuongThang(ctx, 50, 160, 7, 330, mauVien);
+						veDuongThang(ctx, 50, 160, 140, 7, mauVien);
+						veTamGiacPhai(ctx, 185, 162, mauVien);
+						i = 3;
+						break;
+					}
+					default: break;
+				};
+			}, tocdo);
+}
+
+function veHinhElip(ctx, cx, cy, rx, ry, strokeColor, backgroundColor) {
+	ctx.save();
+	ctx.beginPath();
+	ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI*2);
+	ctx.lineWidth = 5;
+	ctx.fillStyle = backgroundColor;
+	ctx.fill();
+	ctx.strokeStyle = strokeColor;
+	ctx.stroke();
+	ctx.closePath();
+	ctx.restore();
+}
+
+function veChu(text, x, y, color){
+	ctx.beginPath();
+	ctx.font = 'bold 16pt serif';
+	ctx.fillStyle = color;
+	ctx.fillText(text, x, y);
+	ctx.closePath();
+}
+
+function veMuiTen(ctx, x, y, width, height, color){
+	ctx.beginPath();
+	ctx.rect(x, y, width, height);
+	ctx.fillStyle = color;
+	ctx.fill();
+	ctx.moveTo(x - 8, y + height);
+	ctx.lineTo(x + width + 8, y + height);
+	ctx.lineTo(x + width/2, y + height + 15);
+	ctx.closePath();
+	ctx.fill();
+}
+
+function veHinhBinhHanh(ctx, x, y, width, height, strokeColor, backgroundColor){
+	ctx.beginPath();
+	ctx.moveTo(x, y);
+	ctx.lineTo(x + width, y);
+	ctx.lineTo(x + width - 20, y + height);
+	ctx.lineTo(x - 20, y + height);
+	ctx.closePath();
+	ctx.lineWidth = 5;
+	ctx.fillStyle = backgroundColor;
+	ctx.fill();
+	ctx.strokeStyle = strokeColor;
+	ctx.stroke();
+}
+
+function veHinhThoi(ctx, x, y, width, height, strokeColor, backgroundColor){
+	ctx.save();
+	ctx.beginPath();
+	ctx.moveTo(x, y);
+
+	ctx.lineWidth = 6;
+	ctx.lineTo(x - width / 2, y + height / 2);
+
+	ctx.lineTo(x, y + height);
+
+	ctx.lineTo(x + width / 2, y + height / 2);
+	ctx.closePath();
+	ctx.fillStyle = backgroundColor;
+	ctx.fill();
+	ctx.strokeStyle = strokeColor;
+	ctx.stroke();
+	ctx.restore();
+}
+
+function veDuongThang(ctx, x, y, width, height, backgroundColor){
+	ctx.beginPath();
+	ctx.rect(x, y, width, height);
+	ctx.fillStyle = backgroundColor;
+	ctx.fill();
+}
+function veHinhChuNhat(ctx, x, y, width, height, strokeColor, backgroundColor){
+	ctx.beginPath();
+	ctx.rect(x, y, width, height);
+	ctx.fillStyle = backgroundColor;
+	ctx.fill();
+	ctx.lineWidth = 7;
+	ctx.strokeStyle = strokeColor;
+	ctx.stroke();
+}
+
+function veTamGiacPhai(ctx, x, y, backgroundColor){
+	ctx.beginPath();
+	ctx.moveTo(x + 15, y);
+	ctx.lineTo(x, y + 10);
+	ctx.lineTo(x, y - 10);
+	ctx.fillStyle = backgroundColor;
+	ctx.fill();
+	ctx.closePath();
+}
+
+
+function veTamGiacTrai(ctx, x, y, backgroundColor){
+	ctx.beginPath();
+	ctx.moveTo(x - 15, y);
+	ctx.lineTo(x, y + 10);
+	ctx.lineTo(x, y - 10);
+	ctx.fillStyle = backgroundColor;
+	ctx.fill();
+	ctx.closePath();
+}
+</script>
+</body>
+</html>
